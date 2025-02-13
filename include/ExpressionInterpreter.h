@@ -13,6 +13,11 @@
 namespace intp
 {
 
+struct cell_address
+{
+    int row = 0, col = 0;
+};
+
 bool isCloseBracket (char c);
 
 int getNumber (std::string::iterator &str);
@@ -25,6 +30,8 @@ void applyTopOperator (linked_stack<const Operator*> &operators, linked_stack<in
 
 // Shunting yard algorithm to interpret string expressions
 int interpretExpression (std::string expr);
+
+cell_address interpretAddress (std::string &str);
 
 }
 

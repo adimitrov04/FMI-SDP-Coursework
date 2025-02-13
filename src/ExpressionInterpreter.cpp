@@ -6,6 +6,90 @@
 #include "../include/operators/ArithmeticOperators.hpp"
 #include "../include/operators/AddressOperators.h"
 
+using namespace intp;
+
+/**
+ * Converts a string into an address of type intp::cell_address.
+ *
+ * @return std::pair<row_number, col_number>
+ * @return {0, 0} if string does not represent a valid address
+ */
+cell_address interpretAddress (std::string &str)
+{
+    if (str.length() != 4 && str.length() != 8)
+        return { 0, 0 };
+
+    int row(0), col(0);
+    std::string::iterator it = str.begin();
+
+    if (*it != 'R')
+        return { 0, 0 };
+
+    it++;
+
+    if (*it == '[')
+    {
+        it++;
+
+        if (*it == '-' && isdigit(*( it + 1 )))
+        {
+            it++;
+            row = AddressOperator::currentRow - getNumber(it);
+        } else if (isdigit(*it))
+        {
+            row = AddressOperator::currentRow + getNumber(it);
+        } else
+        {
+            return { 0, 0 };
+        }
+
+        if (*it != ']')
+            return { 0, 0 };
+
+        it++;
+    } else if (isdigit(*it))
+    {
+        row = getNumber(it);
+    } else
+    {
+        return { 0, 0 };
+    }
+
+    if (*it != 'C')
+        return { 0, 0 };
+
+    it++;
+
+    if (*it == '[')
+    {
+        it++;
+
+        if (*it == '-' && isdigit(*( it + 1 )))
+        {
+            col = AddressOperator::currentCol - getNumber(it);
+        } else if (isdigit(*it))
+        {
+            col = AddressOperator::currentCol + getNumber(it);
+        } else
+        {
+            return { 0, 0 };
+        }
+
+        if (*it != ']')
+            return { 0, 0 };
+
+        it++;
+    } else if (isdigit(*it))
+    {
+        col = intp::getNumber(it);
+    } else
+    {
+        return { 0, 0 };
+    }
+
+    return { row, col };
+}
+
 bool intp::isCloseBracket (char c)
 {
     return c == ')' || c == ']';
@@ -57,7 +141,8 @@ void intp::applyTopOperator (linked_stack<const Operator *> &operators, linked_s
     try
     {
         operatorArgs = getArgs(operators.top(), args);
-    } catch (std::underflow_error &)
+    }
+    catch (std::underflow_error &)
     {
         throw std::logic_error("Invalid expression.\n");
     }
@@ -65,7 +150,11 @@ void intp::applyTopOperator (linked_stack<const Operator *> &operators, linked_s
     args.push(operators.pop()->apply(operatorArgs));
 }
 
-// Shunting yard algorithm to interpret string expressions
+/**
+ * Shunting yard algorithm to interpret expressions from string.
+ *
+ * @return The numerical value of the expression.
+ */
 int intp::interpretExpression (std::string expr)
 {
     linked_stack<int> numbers;
