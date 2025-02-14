@@ -6,7 +6,7 @@
 
 #include "../../include/commands/SetCommand.h"
 
-#include "../../include/ExpressionInterpreter.h"
+#include "../../include/utils/ExpressionInterpreter.h"
 #include "../../include/operators/AddressOperators.h"
 
 SetCommand::SetCommand (std::vector<std::string> &setArgs)

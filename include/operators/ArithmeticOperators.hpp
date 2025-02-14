@@ -93,7 +93,7 @@ struct NegativeOperator : public Operator
 {
 
 public:
-    NegativeOperator () : Operator('_', 8, 1)
+    NegativeOperator () : Operator('_', 6, 1)
     {}
 
 public:
@@ -113,7 +113,7 @@ struct PowerOperator : public Operator
 {
 
 public:
-    PowerOperator () : Operator('^', 7, 2)
+    PowerOperator () : Operator('^', 5, 2)
     {}
 
 public:

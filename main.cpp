@@ -4,7 +4,7 @@
 #include <string>
 
 #include "include/Spreadsheet.h"
-#include "include/ExpressionInterpreter.h"
+#include "include/utils/ExpressionInterpreter.h"
 
 #include "include/commands/CommandFactory.hpp"
 #include "include/commands/PrintCommand.h"

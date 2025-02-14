@@ -8,7 +8,7 @@
 
 #include "../Spreadsheet.h"
 
-#include "../ExpressionInterpreter.h"
+#include "../utils/ExpressionInterpreter.h"
 
 struct AddressOperator : public Operator
 {
@@ -21,7 +21,7 @@ struct AbsoluteAddressOperator : public AddressOperator
 {
 
 public:
-    AbsoluteAddressOperator () : AddressOperator('&', 5, 2) {}
+    AbsoluteAddressOperator () : AddressOperator('R', 7, 2) {}
 
 public:
     int apply (const std::vector<int> &args) const override
@@ -50,7 +50,7 @@ struct RowOffsetOperator : public AddressOperator
 {
 
 public:
-    RowOffsetOperator() : AddressOperator('r', 6, 1) {}
+    RowOffsetOperator() : AddressOperator('r', 8, 1) {}
 
 public:
     int apply (const std::vector<int> &args) const override
@@ -69,7 +69,7 @@ struct ColOffsetOperator : public AddressOperator
 {
 
 public:
-    ColOffsetOperator () : AddressOperator('c', 6, 1)
+    ColOffsetOperator () : AddressOperator('c', 8, 1)
     {}
 
 public:

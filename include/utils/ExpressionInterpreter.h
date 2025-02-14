@@ -5,10 +5,10 @@
 
 #include <string>
 
-#include "utils/linked_stack.hpp"
+#include "linked_stack.hpp"
 
-#include "operators/Operator.h"
-#include "operators/OperatorSelector.hpp"
+#include "../operators/Operator.h"
+#include "../operators/OperatorSelector.hpp"
 
 namespace intp
 {
@@ -32,6 +32,8 @@ void applyTopOperator (linked_stack<const Operator*> &operators, linked_stack<in
 int interpretExpression (std::string expr);
 
 cell_address interpretAddress (std::string &str);
+
+cell_address interpretAddress (std::string::iterator &it);
 
 }
 

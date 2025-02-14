@@ -1,6 +1,6 @@
 #include <cstring>
 
-#include "../include/ExpressionInterpreter.h"
+#include "../include/utils/ExpressionInterpreter.h"
 
 #include "../include/operators/Brackets.hpp"
 #include "../include/operators/ArithmeticOperators.hpp"
@@ -14,11 +14,8 @@ using namespace intp;
  * @return std::pair<row_number, col_number>
  * @return {0, 0} if string does not represent a valid address
  */
-cell_address interpretAddress (std::string &str)
+cell_address intp::interpretAddress (std::string &str)
 {
-    if (str.length() != 4 && str.length() != 8)
-        return { 0, 0 };
-
     int row(0), col(0);
     std::string::iterator it = str.begin();
 
@@ -47,7 +44,8 @@ cell_address interpretAddress (std::string &str)
             return { 0, 0 };
 
         it++;
-    } else if (isdigit(*it))
+    }
+    else if (isdigit(*it))
     {
         row = getNumber(it);
     } else
@@ -79,10 +77,101 @@ cell_address interpretAddress (std::string &str)
             return { 0, 0 };
 
         it++;
-    } else if (isdigit(*it))
+    }
+    else if (isdigit(*it))
     {
         col = intp::getNumber(it);
-    } else
+    }
+    else
+    {
+        return { 0, 0 };
+    }
+
+    if (*it)
+        return { 0, 0 };
+
+    return { row, col };
+}
+
+/**
+ * Interprets a cell address from a string iterator.
+ *
+ * @return std::pair<row_number, col_number>
+ * @return {0, 0} if no valid address is found at the iterator
+ */
+cell_address intp::interpretAddress (std::string::iterator &it)
+{
+    int row(0), col(0);
+
+    if (*it != 'R')
+        return { 0, 0 };
+
+    it++;
+
+    if (*it == '[')
+    {
+        it++;
+
+        if (*it == '-' && isdigit(*( it + 1 )))
+        {
+            it++;
+            row = AddressOperator::currentRow - getNumber(it);
+        }
+        else if (isdigit(*it))
+        {
+            row = AddressOperator::currentRow + getNumber(it);
+        }
+        else
+        {
+            return { 0, 0 };
+        }
+
+        if (*it != ']')
+            return { 0, 0 };
+
+        it++;
+    }
+    else if (isdigit(*it))
+    {
+        row = getNumber(it);
+    }
+    else
+    {
+        return { 0, 0 };
+    }
+
+    if (*it != 'C')
+        return { 0, 0 };
+
+    it++;
+
+    if (*it == '[')
+    {
+        it++;
+
+        if (*it == '-' && isdigit(*( it + 1 )))
+        {
+            col = AddressOperator::currentCol - getNumber(it);
+        }
+        else if (isdigit(*it))
+        {
+            col = AddressOperator::currentCol + getNumber(it);
+        }
+        else
+        {
+            return { 0, 0 };
+        }
+
+        if (*it != ']')
+            return { 0, 0 };
+
+        it++;
+    }
+    else if (isdigit(*it))
+    {
+        col = intp::getNumber(it);
+    }
+    else
     {
         return { 0, 0 };
     }
@@ -183,17 +272,14 @@ int intp::interpretExpression (std::string expr)
                 *it = '_';
         }
 
-        if (*it == 'R')
-            *it = '&';
-
-        if (*it == '[')
+        if (*(it - 1) == 'R')
         {
-            if (it > expr.begin() && *(it - 1) == '&')
-            { *it = 'r'; }
-            else if (it > expr.begin() && *(it - 1) == 'C')
-            { *it = 'c'; }
-            else
-            { throw std::logic_error("Invalid expression.\n"); }
+            it--;
+            cell_address add = intp::interpretAddress(it);
+
+            numbers.push(add.row);
+            numbers.push(add.col);
+            continue;
         }
 
         const Operator *op = OperatorSelector::GetSelector().SelectOperator(*it);

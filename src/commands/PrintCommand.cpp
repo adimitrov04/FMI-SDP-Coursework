@@ -8,7 +8,7 @@
 
 #include "../../include/commands/PrintCommand.h"
 
-#include "../../include/ExpressionInterpreter.h"
+#include "../../include/utils/ExpressionInterpreter.h"
 #include "../../include/operators/AddressOperators.h"
 
 void PrintCommand::Execute (Spreadsheet &sheet, std::istream &in, std::ostream &out)
